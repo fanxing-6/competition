@@ -40,7 +40,18 @@ docker exec $TMP sh -lc "tar -xzf /tmp/$BACKUP -C /data"
 
 ```powershell
 # 按你的镜像/版本调整挂载点（常见为 /app/backend/data）
-docker run -d --name open-webui -p 3000:8080 -v $VOLUME:/app/backend/data ghcr.io/open-webui/open-webui:latest
+docker run -d -p 3000:8080 \
+  -v open-webui:/app/backend/data \
+  -e THREAD_POOL_SIZE=100 \
+  -e WEBUI_NAME="MindSpore Helper" \
+  -e USER_PERMISSIONS_CHAT_PARAMS=False \
+  -e USER_PERMISSIONS_CHAT_CONTINUE_RESPONSE=False \
+  -e USER_PERMISSIONS_CHAT_REGENERATE_RESPONSE=False \
+  -e USER_PERMISSIONS_CHAT_RATE_RESPONSE=False \
+  -e USER_PERMISSIONS_CHAT_MULTIPLE_MODELS=False \
+  --restart always \
+  --name open-webui \
+  ghcr.nju.edu.cn/open-webui/open-webui:main
 ```
 
 ## 前提
